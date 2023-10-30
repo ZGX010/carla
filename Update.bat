@@ -33,11 +33,17 @@ if "%CONTENT_ID:~0,2%"=="20" (
 rem ============================================================================
 rem -- Download the content ----------------------------------------------------
 rem ============================================================================
+if exist "%CONTENT_FILE%" (
+    echo File already downloaded. Skipping download.
+    goto extract_content
+)
+
 
 echo Downloading "%CONTENT_LINK%"...
 powershell -Command "(New-Object System.Net.WebClient).DownloadFile('%CONTENT_LINK%', '%CONTENT_FILE%')"
 if %errorlevel% neq 0 goto error_download
 
+:extract_content
 echo %FILE_N% Extracting content from "%CONTENT_FILE%", this can take a while...
 if exist "%ProgramW6432%/7-Zip/7z.exe" (
     "%ProgramW6432%/7-Zip/7z.exe" x "%CONTENT_FILE%" -o"%CONTENT_FOLDER%" -y
